@@ -75,7 +75,7 @@ export const handler = async (event) => {
     // Agentic loop — runs until the model stops using tools
     for (let turn = 0; turn < 10 && finalText === null; turn++) {
       const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 4096,
         system: SYSTEM,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],
