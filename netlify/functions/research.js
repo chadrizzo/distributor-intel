@@ -57,9 +57,9 @@ export const handler = async (event) => {
     return { statusCode: 405, headers: CORS, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  let name;
+  let name, webSearch;
   try {
-    ({ name } = JSON.parse(event.body));
+    ({ name, webSearch } = JSON.parse(event.body));
   } catch {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Invalid JSON body' }) };
   }
@@ -72,10 +72,22 @@ export const handler = async (event) => {
     const messages = [{ role: 'user', content: buildPrompt(name.trim()) }];
     let finalText = null;
 
-    // Agentic loop — runs until the model stops using tools
-    for (let turn = 0; turn < 10 && finalText === null; turn++) {
+    // If webSearch is off, skip the agentic loop entirely — one direct call
+    if (!webSearch) {
       const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-haiku-4-5',
+        max_tokens: 4096,
+        system: SYSTEM,
+        messages,
+      });
+      const textBlock = response.content.find((b) => b.type === 'text');
+      finalText = textBlock?.text ?? null;
+    }
+
+    // Agentic loop — runs until the model stops using tools (web search mode)
+    for (let turn = 0; turn < 2 && finalText === null; turn++) {
+      const response = await anthropic.messages.create({
+        model: 'claude-haiku-4-5',
         max_tokens: 4096,
         system: SYSTEM,
         tools: [{ type: 'web_search_20250305', name: 'web_search' }],

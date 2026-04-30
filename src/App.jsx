@@ -174,6 +174,7 @@ function SavedCard({ profile, onSelect, onDelete }) {
 export default function App() {
   const [activeTab, setActiveTab] = useState('research');
   const [query, setQuery] = useState('');
+  const [webSearch, setWebSearch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currentProfile, setCurrentProfile] = useState(null);
@@ -194,7 +195,7 @@ export default function App() {
       const res = await fetch('/.netlify/functions/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: query.trim() }),
+        body: JSON.stringify({ name: query.trim(), webSearch }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
@@ -262,8 +263,7 @@ export default function App() {
             <div className="search-section">
               <h1 className="page-title">Research a Distributor</h1>
               <p className="page-sub">
-                Enter a distributor name to generate an AI-powered sales intelligence profile
-                using live web research.
+                Enter a distributor name to generate an AI-powered sales intelligence profile.
               </p>
               <div className="search-bar">
                 <input
@@ -282,6 +282,23 @@ export default function App() {
                 >
                   {loading ? 'Researching…' : 'Research'}
                 </button>
+              </div>
+              <div className="search-mode">
+                <button
+                  className={`mode-btn ${!webSearch ? 'mode-btn--active' : ''}`}
+                  onClick={() => setWebSearch(false)}
+                >
+                  ⚡ Quick — AI only
+                </button>
+                <button
+                  className={`mode-btn ${webSearch ? 'mode-btn--active' : ''}`}
+                  onClick={() => setWebSearch(true)}
+                >
+                  🔎 Deep — Live web search
+                </button>
+                <span className="mode-hint">
+                  {webSearch ? 'Searches the web for current info (~$0.20/search)' : 'Uses AI training data — fast and free'}
+                </span>
               </div>
             </div>
 

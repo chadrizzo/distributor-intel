@@ -1,3 +1,42 @@
+/* ── Search mode toggle ──────────────────────────────────────────────────────── */
+
+.search-mode {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .75rem;
+  flex-wrap: wrap;
+}
+
+.mode-btn {
+  padding: .35rem .9rem;
+  border-radius: 999px;
+  border: 1.5px solid #cbd5e1;
+  background: #fff;
+  color: #64748b;
+  font-size: .8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.mode-btn:hover {
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+.mode-btn--active {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #fff;
+}
+
+.mode-hint {
+  font-size: .78rem;
+  color: #94a3b8;
+  margin-left: .25rem;
+}
+
 /* ── Reset & base ──────────────────────────────────────────────────────────── */
 
 *, *::before, *::after {
